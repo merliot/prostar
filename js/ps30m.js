@@ -17,98 +17,117 @@ class Ps30m extends WebSocketController {
 	}
 
 	show() {
-		switch (this.viewMode) {
-		case ViewMode.ViewFull:
-			this.showStatus()
-			this.showSystem()
-			this.showController()
-			this.showBatteryFull()
-			this.showLoadInfoFull()
-			this.showSolarFull()
-			this.showDaily()
-			this.showHistorical()
-			break;
-		case ViewMode.ViewTile:
-			this.showBatteryTile()
-			this.showLoadInfoTile()
-			this.showSolarTile()
-			break;
-		}
+		this.showStatus()
+		this.showSystem()
+		this.showController()
+		this.showBattery()
+		this.showLoadInfo()
+		this.showSolar()
+		this.showDaily()
+		this.showHistorical()
 	}
 
 	showStatus() {
-		var status = document.getElementById("status")
-		status.value = ""
-		status.value += "Status:                      " + this.state.Status
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var status = document.getElementById("status")
+			status.value = ""
+			status.value += "Status:                      " + this.state.Status
+			break;
+		}
 	}
 
 	showSystem() {
-		var ta = document.getElementById("system")
-		ta.value = ""
-		ta.value += "Software Version:            " + this.state.System.SWVersion + "\r\n"
-		ta.value += "Batt Voltage Multiplier:     " + this.state.System.BattVoltMulti
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("system")
+			ta.value = ""
+			ta.value += "Software Version:            " + this.state.System.SWVersion + "\r\n"
+			ta.value += "Batt Voltage Multiplier:     " + this.state.System.BattVoltMulti
+			break;
+		}
 	}
 
 	showController() {
-		var ta = document.getElementById("controller")
-		ta.value = ""
-		ta.value += "* Current (A):               " + this.state.Controller.Amps
-	}
-
-	showBatteryFull() {
-		var ta = document.getElementById("battery")
-		ta.value = ""
-		ta.value += "* Voltage (V):               " + this.state.Battery.Volts + "\r\n"
-		ta.value += "* Current (A):               " + this.state.Battery.Amps + "\r\n"
-		ta.value += "* Sense Voltage (V):         " + this.state.Battery.SenseVolts + "\r\n"
-		ta.value += "* Slow Filter Voltage (V):   " + this.state.Battery.SlowVolts + "\r\n"
-		ta.value += "* Slow Filter Current (A):   " + this.state.Battery.SlowAmps
-	}
-
-	showBatteryTile() {
-		document.getElementById("battery-volts").innerText = this.state.Battery.Volts.toFixed(2)
-		document.getElementById("battery-amps").innerText = this.state.Battery.Amps.toFixed(2)
-	}
-
-	showLoadInfoFull() {
-		var ta = document.getElementById("load")
-		ta.value = ""
-		ta.value += "* Voltage (V):               " + this.state.LoadInfo.Volts + "\r\n"
-		ta.value += "* Current (A):               " + this.state.LoadInfo.Amps
-	}
-
-	showLoadInfoTile() {
-		var volts = document.getElementById("load-volts")
-		var amps = document.getElementById("load-amps")
-		volts.innerText = this.state.LoadInfo.Volts.toFixed(2)
-		amps.innerText = this.state.LoadInfo.Amps.toFixed(2)
-		if (this.state.LoadInfo.Amps === 0) {
-			volts.style.background = "tomato"
-			amps.style.background = "tomato"
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("controller")
+			ta.value = ""
+			ta.value += "* Current (A):               " + this.state.Controller.Amps
+			break;
 		}
-
 	}
 
-	showSolarFull() {
-		var ta = document.getElementById("solar")
-		ta.value = ""
-		ta.value += "* Voltage (V):               " + this.state.Solar.Volts + "\r\n"
-		ta.value += "* Current (A):               " + this.state.Solar.Amps
+	showBattery() {
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("battery")
+			ta.value = ""
+			ta.value += "* Voltage (V):               " + this.state.Battery.Volts + "\r\n"
+			ta.value += "* Current (A):               " + this.state.Battery.Amps + "\r\n"
+			ta.value += "* Sense Voltage (V):         " + this.state.Battery.SenseVolts + "\r\n"
+			ta.value += "* Slow Filter Voltage (V):   " + this.state.Battery.SlowVolts + "\r\n"
+			ta.value += "* Slow Filter Current (A):   " + this.state.Battery.SlowAmps
+			break;
+		case ViewMode.ViewTile:
+			document.getElementById("battery-volts").innerText = this.state.Battery.Volts.toFixed(2)
+			document.getElementById("battery-amps").innerText = this.state.Battery.Amps.toFixed(2)
+			break;
+		}
 	}
 
-	showSolarTile() {
-		document.getElementById("solar-volts").innerText = this.state.Solar.Volts.toFixed(2)
-		document.getElementById("solar-amps").innerText = this.state.Solar.Amps.toFixed(2)
+	showLoadInfo() {
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("load")
+			ta.value = ""
+			ta.value += "* Voltage (V):               " + this.state.LoadInfo.Volts + "\r\n"
+			ta.value += "* Current (A):               " + this.state.LoadInfo.Amps
+			break;
+		case ViewMode.ViewTile:
+			var volts = document.getElementById("load-volts")
+			var amps = document.getElementById("load-amps")
+			volts.innerText = this.state.LoadInfo.Volts.toFixed(2)
+			amps.innerText = this.state.LoadInfo.Amps.toFixed(2)
+			if (this.state.LoadInfo.Amps === 0) {
+				volts.style.background = "tomato"
+				amps.style.background = "tomato"
+			}
+			break;
+		}
+	}
+
+	showSolar() {
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("solar")
+			ta.value = ""
+			ta.value += "* Voltage (V):               " + this.state.Solar.Volts + "\r\n"
+			ta.value += "* Current (A):               " + this.state.Solar.Amps
+			break;
+		case ViewMode.ViewTile:
+			document.getElementById("solar-volts").innerText = this.state.Solar.Volts.toFixed(2)
+			document.getElementById("solar-amps").innerText = this.state.Solar.Amps.toFixed(2)
+			break;
+		}
 	}
 
 	showDaily() {
-		var ta = document.getElementById("daily")
-		ta.value = ""
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("daily")
+			ta.value = ""
+			break;
+		}
 	}
 
 	showHistorical() {
-		var ta = document.getElementById("historical")
-		ta.value = ""
+		switch (this.viewMode) {
+		case ViewMode.ViewFull:
+			var ta = document.getElementById("historical")
+			ta.value = ""
+			break;
+		}
 	}
 
 	handle(msg) {

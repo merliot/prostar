@@ -21,8 +21,7 @@ func (p *Ps30m) targetNew() {
 }
 
 func (p *Ps30m) Write(buf []byte) (n int, err error) {
-	n, err = p.uart.Write(buf)
-	return n, err
+	return p.uart.Write(buf)
 }
 
 func (p *Ps30m) Read(buf []byte) (n int, err error) {
