@@ -6,13 +6,11 @@ type targetRelayStruct struct {
 }
 
 type targetStruct struct {
-	osStruct
 	start uint16
 	words uint16
 }
 
 func (p *Ps30m) targetNew() {
-	p.osNew()
 }
 
 func (p *Ps30m) Write(buf []byte) (n int, err error) {

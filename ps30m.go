@@ -1,6 +1,7 @@
 package ps30m
 
 import (
+	"embed"
 	"strconv"
 	"time"
 
@@ -9,6 +10,9 @@ import (
 	"github.com/merliot/device/modbus"
 	"github.com/x448/float16"
 )
+
+//go:embed css html images js template
+var fs embed.FS
 
 const (
 	regVerSw        = 0x0000
@@ -89,7 +93,7 @@ var targets = []string{"demo", "rpi", "nano-rp2040"}
 func New(id, model, name string) dean.Thinger {
 	println("NEW PS30M")
 	p := &Ps30m{}
-	p.Device = device.New(id, model, name, targets).(*device.Device)
+	p.Device = device.New(id, model, name, fs, targets).(*device.Device)
 	p.Modbus = modbus.New(p)
 	p.Status = "OK"
 	p.targetNew()
