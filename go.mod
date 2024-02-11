@@ -10,7 +10,7 @@ require (
 
 require (
 	github.com/gomarkdown/markdown v0.0.0-20230922112808-5421fefb8386 // indirect
-	github.com/merliot/device v0.0.0-20240210091105-aa2a07e5d472 // indirect
+	github.com/merliot/device v0.0.0-20240210235837-2d3d66bbba5c // indirect
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

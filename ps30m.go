@@ -2,6 +2,7 @@ package ps30m
 
 import (
 	"embed"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -120,6 +121,10 @@ func (p *Ps30m) Subscribers() dean.Subscribers {
 		"update/load":       p.save,
 		"update/solar":      p.save,
 	}
+}
+
+func (p *Ps30m) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p.API(w, r, p)
 }
 
 func swap(b []byte) uint16 {
