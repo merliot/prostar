@@ -86,19 +86,17 @@ type Ps30m struct {
 	Battery        Battery
 	LoadInfo       LoadInfo
 	Solar          Solar
-	targetStruct
 }
 
 var targets = []string{"demo", "rpi", "nano-rp2040"}
 
 func New(id, model, name string) dean.Thinger {
 	println("NEW PS30M")
-	p := &Ps30m{}
-	p.Device = device.New(id, model, name, fs, targets).(*device.Device)
-	p.Modbus = modbus.New(p)
-	p.Status = "OK"
-	p.targetNew()
-	return p
+	return &Ps30m{
+		Device: device.New(id, model, name, fs, targets).(*device.Device),
+		Modbus: modbus.New(newTransport()),
+		Status: "OK",
+	}
 }
 
 func (p *Ps30m) save(msg *dean.Msg) {
