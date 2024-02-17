@@ -13,7 +13,7 @@ require (
 	github.com/gomarkdown/markdown v0.0.0-20230922112808-5421fefb8386 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/merliot/device v0.0.0-20240215185038-bf7582eb63f6 // indirect
+	github.com/merliot/device v0.0.0-20240217061102-d4e7310ef808 // indirect
 	github.com/sigurn/crc8 v0.0.0-20220107193325-2243fe600f9f // indirect
 	github.com/warthog618/gpiod v0.8.2 // indirect
 	gobot.io/x/gobot/v2 v2.3.0 // indirect

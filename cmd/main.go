@@ -13,7 +13,8 @@ import (
 var (
 	id           = dean.GetEnv("ID", "ps30m01")
 	name         = dean.GetEnv("NAME", "Morningstar ps30m")
-	deployParams = dean.GetEnv("DEPLOY_PARAMS", "target=demo")
+	deployParams = dean.GetEnv("DEPLOY_PARAMS", "")
+	wsScheme     = dean.GetEnv("WS_SCHEME", "ws://")
 	port         = dean.GetEnv("PORT", "8000")
 	portPrime    = dean.GetEnv("PORT_PRIME", "8001")
 	user         = dean.GetEnv("USER", "")
@@ -28,5 +29,6 @@ func main() {
 	ps30m.SetDeployParams(deployParams)
 	ps30m.SetWifiAuth(ssids, passphrases)
 	ps30m.SetDialURLs(dialURLs)
-	runner.Run(ps30m, port, portPrime, user, passwd, dialURLs)
+	ps30m.SetWsScheme(wsScheme)
+	runner.Run(ps30m, port, portPrime, user, passwd, dialURLs, wsScheme)
 }

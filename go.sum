@@ -25,6 +25,8 @@ github.com/merliot/device v0.0.0-20240215175152-61f31ee7de94 h1:VjkEOHjE89vY2evm
 github.com/merliot/device v0.0.0-20240215175152-61f31ee7de94/go.mod h1:boa/XRJWq7lR3iGbuDpms3q2ym0Yc6cmIU5D3tT4eok=
 github.com/merliot/device v0.0.0-20240215185038-bf7582eb63f6 h1:/IcpOSoQWSnYTR9QvkdnAHRVlOxJKC7gjQDy3GgWbyQ=
 github.com/merliot/device v0.0.0-20240215185038-bf7582eb63f6/go.mod h1:boa/XRJWq7lR3iGbuDpms3q2ym0Yc6cmIU5D3tT4eok=
+github.com/merliot/device v0.0.0-20240217061102-d4e7310ef808 h1:/BeS6NKMhBW5CYjLLnqfoAP+O+bqfvLiaFx19LZOrFk=
+github.com/merliot/device v0.0.0-20240217061102-d4e7310ef808/go.mod h1:boa/XRJWq7lR3iGbuDpms3q2ym0Yc6cmIU5D3tT4eok=
 github.com/merliot/hub v0.0.0-20231201053612-24f08711cbb1 h1:RogBpD2Hj+o9OQVKS+ZsS9+kz3WXzLfDH09zGjKnc2k=
 github.com/merliot/hub v0.0.0-20231201053612-24f08711cbb1/go.mod h1:UWNzbHxuk59gpZBJ5IAPevLmMgnpwhygAJKeV/U7avo=
 github.com/sigurn/crc8 v0.0.0-20220107193325-2243fe600f9f h1:1R9KdKjCNSd7F8iGTxIpoID9prlYH8nuNYKt0XvweHA=
