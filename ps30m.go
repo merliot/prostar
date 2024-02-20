@@ -12,7 +12,7 @@ import (
 	"github.com/x448/float16"
 )
 
-//go:embed css html images js template
+//go:embed css go.mod html images js template
 var fs embed.FS
 
 const (
