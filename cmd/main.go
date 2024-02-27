@@ -30,5 +30,5 @@ func main() {
 	ps30m.SetWifiAuth(ssids, passphrases)
 	ps30m.SetDialURLs(dialURLs)
 	ps30m.SetWsScheme(wsScheme)
-	runner.Run(ps30m, port, portPrime, user, passwd, dialURLs, wsScheme)
+	runner.Run(ps30m.Device, port, portPrime, user, passwd, dialURLs, wsScheme)
 }
