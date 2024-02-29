@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 RUN go build -tags prime -o /ps30m ./cmd
-RUN /ps30m -uf2
+RUN go run ./cmd/gen-uf2
 
 EXPOSE 8000
 
