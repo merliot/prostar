@@ -54,8 +54,6 @@ jobs:
           images: |
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
-          tags: |
-            type=raw,value=latest
           labels: |
             org.opencontainers.image.title=Merliot PS30M
             org.opencontainers.image.description=PS30M device monitors a Morningstar PS30M solar charge controller
