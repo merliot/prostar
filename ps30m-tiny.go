@@ -3,10 +3,13 @@
 package ps30m
 
 import (
+	"embed"
 	"machine"
 
 	"github.com/merliot/device/uart"
 )
+
+var fs embed.FS
 
 func newTransport() uart.Uart {
 	u := uart.New()

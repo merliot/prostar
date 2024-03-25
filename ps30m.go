@@ -1,7 +1,6 @@
 package ps30m
 
 import (
-	"embed"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,9 +10,6 @@ import (
 	"github.com/merliot/device/modbus"
 	"github.com/x448/float16"
 )
-
-//go:embed css go.mod html images js template
-var fs embed.FS
 
 const (
 	regVerSw        = 0x0000
