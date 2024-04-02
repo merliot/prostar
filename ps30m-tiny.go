@@ -11,7 +11,7 @@ import (
 
 var fs embed.FS
 
-func newTransport() uart.Uart {
+func newTransport() *uart.Uart {
 	u := uart.New()
 	u.SetFormat(8, 2, machine.ParityNone) // 8N2
 	return u
