@@ -3,8 +3,8 @@ module github.com/merliot/ps30m
 go 1.22.0
 
 require (
-	github.com/merliot/dean v0.0.0-20240404185305-c534a00030bd
-	github.com/merliot/device v0.0.0-20240410052418-802d6afbc821
+	github.com/merliot/dean v0.0.0-20240411074734-3486951e0fe5
+	github.com/merliot/device v0.0.0-20240411075010-f3579e5a95cb
 	github.com/x448/float16 v0.8.4
 )
 
