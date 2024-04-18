@@ -113,21 +113,25 @@ class Ps30m extends WebSocketController {
 	}
 
 	showDaily() {
+		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			var ta = document.getElementById("daily")
 			ta.value = ""
 			break;
 		}
+		*/
 	}
 
 	showHistorical() {
+		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			var ta = document.getElementById("historical")
 			ta.value = ""
 			break;
 		}
+		*/
 	}
 
 	handle(msg) {
