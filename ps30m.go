@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	regVerSw        = 0x0000
-	regAdcIcFShadow = 0x0010
+	regVerSw = 0x0000
+	regAdcIa = 0x0011
+	regAdcIl = 0x0016
 )
 
 type System struct {
@@ -85,7 +86,7 @@ type Ps30m struct {
 	Solar          Solar
 }
 
-var targets = []string{"demo", "rpi", "nano-rp2040"}
+var targets = []string{"demo", "x86-64", "rpi", "nano-rp2040"}
 
 func New(id, model, name string) dean.Thinger {
 	fmt.Println("NEW PS30M\r")
@@ -174,22 +175,26 @@ func (p *Ps30m) readSystem(s *System) error {
 
 func (p *Ps30m) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) error {
 
-	regs, err := p.ReadRegisters(regAdcIcFShadow, 10)
+	regs, err := p.ReadRegisters(regAdcIa, 4)
 	if err != nil {
 		return err
 	}
 
 	// Filtered ADC
-	c.Amps = f16(regs[0:2])
-	s.Amps = f16(regs[2:4])
-	b.Volts = f16(regs[4:6])
-	s.Volts = f16(regs[6:8])
-	l.Volts = f16(regs[8:10])
-	b.Amps = f16(regs[10:12])
-	l.Amps = f16(regs[12:14])
-	b.SenseVolts = f16(regs[14:16])
-	b.SlowVolts = f16(regs[16:18])
-	b.SlowAmps = f16(regs[18:20])
+	s.Amps = f16(regs[0:2])
+	b.Volts = f16(regs[2:4])
+	s.Volts = f16(regs[4:6])
+	l.Volts = f16(regs[6:8])
+
+	regs, err = p.ReadRegisters(regAdcIl, 4)
+	if err != nil {
+		return err
+	}
+
+	l.Amps = f16(regs[0:2])
+	b.SenseVolts = f16(regs[2:4])
+	b.SlowVolts = f16(regs[4:6])
+	b.SlowAmps = f16(regs[6:8])
 
 	return nil
 }
@@ -263,10 +268,10 @@ func (p *Ps30m) Run(i *dean.Injector) {
 	//p.sendHourly(i)
 
 	nextHour := time.Now().Add(time.Hour)
-	ticker := time.NewTicker(5 * time.Second)
 
-	for range ticker.C {
+	for {
 		p.sendDynamic(i)
+		time.Sleep(5 * time.Second)
 		if time.Now().After(nextHour) {
 			//p.sendHourly(i)
 			nextHour = time.Now().Add(time.Hour)

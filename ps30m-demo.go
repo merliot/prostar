@@ -1,4 +1,4 @@
-//go:build !tinygo && !rpi
+//go:build !x86_64 && !tinygo && !rpi
 
 package ps30m
 
@@ -23,14 +23,18 @@ func (t *transport) Read(buf []byte) (n int, err error) {
 	res := buf[3:]
 	switch t.start {
 	case regVerSw:
-	case regAdcIcFShadow:
+	case regAdcIa:
 		// TODO make this more dynamic using a little bit of random
-		copy(res[2:4], unf16(1.3))   // solar.amps
-		copy(res[4:6], unf16(14.1))  // battery.volts
-		copy(res[6:8], unf16(11.3))  // solar.volts
-		copy(res[8:10], unf16(0))    // load.volts
-		copy(res[10:12], unf16(3.3)) // battery.amps
-		copy(res[12:14], unf16(0))   // load.amps
+		copy(res[0:2], unf16(1.3))  // solar.amps
+		copy(res[2:4], unf16(14.1)) // battery.volts
+		copy(res[4:6], unf16(11.3)) // solar.volts
+		copy(res[6:8], unf16(0))    // load.volts
+	case regAdcIl:
+		// TODO make this more dynamic using a little bit of random
+		copy(res[0:2], unf16(3.3)) // load.amps
+		copy(res[2:4], unf16(0))   // battery.sensevolts
+		copy(res[4:6], unf16(0))   // battery.slowvolts
+		copy(res[6:8], unf16(0))   // battery.slowamps
 	}
 	return int(5 + t.words*2), nil
 }
