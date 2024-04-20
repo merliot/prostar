@@ -1,3 +1,7 @@
+// Morningstar PS-30M solar charge controller device.
+//
+// modbus ref: https://www.morningstarcorp.com/wp-content/uploads/technical-doc-prostar-modbus-specification-en.pdf
+
 package ps30m
 
 import (

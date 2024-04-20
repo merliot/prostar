@@ -12,7 +12,7 @@ import (
 
 var (
 	id           = dean.GetEnv("ID", "ps30m01")
-	name         = dean.GetEnv("NAME", "Morningstar ps30m")
+	name         = dean.GetEnv("NAME", "Morningstar PS-30M")
 	deployParams = dean.GetEnv("DEPLOY_PARAMS", "")
 	wsScheme     = dean.GetEnv("WS_SCHEME", "ws://")
 	port         = dean.GetEnv("PORT", "8000")

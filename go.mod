@@ -3,13 +3,13 @@ module github.com/merliot/ps30m
 go 1.22.0
 
 require (
+	github.com/goburrow/serial v0.1.0
 	github.com/merliot/dean v0.0.0-20240412222937-26290ebe17d0
-	github.com/merliot/device v0.0.0-20240418180148-b1f3107c8d2d
+	github.com/merliot/device v0.0.0-20240420060616-672919487e6c
 	github.com/x448/float16 v0.8.4
 )
 
 require (
-	github.com/goburrow/serial v0.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
