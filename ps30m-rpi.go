@@ -3,44 +3,39 @@
 package ps30m
 
 import (
-	"errors"
-	"fmt"
 	"time"
 
-	"github.com/goburrow/serial"
+	"github.com/merliot/device/modbus"
+	"github.com/tarm/serial"
 )
-
-type transport struct {
-	serial.Port
-}
 
 var dev = "/dev/ttyUSB0"
 
+type transport struct {
+	*serial.Port
+}
+
 func newTransport() *transport {
-	port, err := serial.Open(&serial.Config{
-		Address:  dev,
-		BaudRate: 9600,
-		StopBits: 2,
-		Parity:   "N",
-		Timeout:  time.Second,
+	port, _ := serial.OpenPort(&serial.Config{
+		Name:        dev,
+		Baud:        9600,
+		StopBits:    2,
+		Parity:      serial.ParityNone,
+		ReadTimeout: time.Second,
 	})
-	if err != nil {
-		fmt.Println("Error opening serial port", dev, err)
-		return nil
-	}
 	return &transport{port}
 }
 
 func (t *transport) Read(buf []byte) (n int, err error) {
 	if t.Port == nil {
-		return 0, errors.New("Port" + dev + "not opened")
+		return 0, modbus.ErrPortNotOpen
 	}
 	return t.Port.Read(buf)
 }
 
 func (t *transport) Write(buf []byte) (n int, err error) {
 	if t.Port == nil {
-		return 0, errors.New("Port " + dev + "not opened")
+		return 0, modbus.ErrPortNotOpen
 	}
 	return t.Port.Write(buf)
 }
