@@ -81,13 +81,14 @@ type msgSolar struct {
 
 type Prostar struct {
 	*device.Device
-	*modbus.Modbus `json:"-"`
-	Status         string
-	System         System
-	Controller     Controller
-	Battery        Battery
-	LoadInfo       LoadInfo
-	Solar          Solar
+	modbus.Modbus `json:"-"`
+	Status        string
+	System        System
+	Controller    Controller
+	Battery       Battery
+	LoadInfo      LoadInfo
+	Solar         Solar
+	tty           string
 }
 
 var targets = []string{"demo", "x86-64", "rpi", "nano-rp2040"}
@@ -96,7 +97,6 @@ func New(id, model, name string) dean.Thinger {
 	fmt.Println("NEW PROSTAR\r")
 	return &Prostar{
 		Device: device.New(id, model, name, fs, targets).(*device.Device),
-		Modbus: modbus.New(newTransport()),
 		Status: "OK",
 	}
 }
@@ -263,6 +263,16 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 	}
 
 	p.sendStatus(i, "OK")
+}
+
+func (p *Prostar) config() {
+	tty := p.ParamFirstValue("tty")
+	p.Modbus = modbus.New(newTransport(tty))
+}
+
+func (p *Prostar) Setup() {
+	p.Device.Setup()
+	p.config()
 }
 
 func (p *Prostar) Run(i *dean.Injector) {

@@ -7,7 +7,7 @@ type transport struct {
 	words uint16
 }
 
-func newTransport() *transport {
+func newTransport(tty string) *transport {
 	return &transport{}
 }
 

@@ -5,37 +5,61 @@ package prostar
 import (
 	"time"
 
-	"github.com/merliot/device/modbus"
 	"github.com/tarm/serial"
 )
 
-var dev = "/dev/ttyUSB0"
+var defaultTty = "/dev/ttyUSB0"
 
 type transport struct {
 	*serial.Port
+	tty string
 }
 
-func newTransport() *transport {
-	port, _ := serial.OpenPort(&serial.Config{
-		Name:        dev,
+func newTransport(tty string) *transport {
+	if tty == "" {
+		tty = defaultTty
+	}
+	return &transport{tty: tty}
+}
+
+func (t *transport) open() (err error) {
+	if t.Port != nil {
+		return
+	}
+	t.Port, err = serial.OpenPort(&serial.Config{
+		Name:        t.tty,
 		Baud:        9600,
 		StopBits:    2,
 		Parity:      serial.ParityNone,
 		ReadTimeout: time.Second,
 	})
-	return &transport{port}
+	return
 }
 
-func (t *transport) Read(buf []byte) (n int, err error) {
-	if t.Port == nil {
-		return 0, modbus.ErrPortNotOpen
+func (t *transport) Read(buf []byte) (int, error) {
+	err := t.open()
+	if err != nil {
+		return 0, err
 	}
-	return t.Port.Read(buf)
+	n, err := t.Port.Read(buf)
+	if err != nil {
+		t.Port.Close()
+		t.Port = nil
+		return 0, err
+	}
+	return n, nil
 }
 
-func (t *transport) Write(buf []byte) (n int, err error) {
-	if t.Port == nil {
-		return 0, modbus.ErrPortNotOpen
+func (t *transport) Write(buf []byte) (int, error) {
+	err := t.open()
+	if err != nil {
+		return 0, err
 	}
-	return t.Port.Write(buf)
+	n, err := t.Port.Write(buf)
+	if err != nil {
+		t.Port.Close()
+		t.Port = nil
+		return 0, err
+	}
+	return n, nil
 }
