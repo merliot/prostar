@@ -1,2 +1,2 @@
-# ps30m
-Morningstar PS30M Charge Controller Device
+# prostar
+Morningstar ProStar PWM Solar Charge Controller device

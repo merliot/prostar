@@ -7,12 +7,12 @@ package main
 import (
 	"github.com/merliot/dean"
 	"github.com/merliot/device/runner"
-	"github.com/merliot/ps30m"
+	"github.com/merliot/prostar"
 )
 
 var (
-	id           = dean.GetEnv("ID", "ps30m01")
-	name         = dean.GetEnv("NAME", "Morningstar PS-30M")
+	id           = dean.GetEnv("ID", "prostar01")
+	name         = dean.GetEnv("NAME", "ProStar")
 	deployParams = dean.GetEnv("DEPLOY_PARAMS", "")
 	wsScheme     = dean.GetEnv("WS_SCHEME", "ws://")
 	port         = dean.GetEnv("PORT", "8000")
@@ -25,10 +25,10 @@ var (
 )
 
 func main() {
-	ps30m := ps30m.New(id, "ps30m", name).(*ps30m.Ps30m)
-	ps30m.SetDeployParams(deployParams)
-	ps30m.SetWifiAuth(ssids, passphrases)
-	ps30m.SetDialURLs(dialURLs)
-	ps30m.SetWsScheme(wsScheme)
-	runner.Run(ps30m, port, portPrime, user, passwd, dialURLs, wsScheme)
+	prostar := prostar.New(id, "prostar", name).(*prostar.Prostar)
+	prostar.SetDeployParams(deployParams)
+	prostar.SetWifiAuth(ssids, passphrases)
+	prostar.SetDialURLs(dialURLs)
+	prostar.SetWsScheme(wsScheme)
+	runner.Run(prostar, port, portPrime, user, passwd, dialURLs, wsScheme)
 }

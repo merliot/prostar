@@ -1,8 +1,8 @@
-// Morningstar PS-30M solar charge controller device.
+// Morningstar Prostar PWM solar charge controller device.
 //
 // modbus ref: https://www.morningstarcorp.com/wp-content/uploads/technical-doc-prostar-modbus-specification-en.pdf
 
-package ps30m
+package prostar
 
 import (
 	"fmt"
@@ -79,7 +79,7 @@ type msgSolar struct {
 	Solar Solar
 }
 
-type Ps30m struct {
+type Prostar struct {
 	*device.Device
 	*modbus.Modbus `json:"-"`
 	Status         string
@@ -93,24 +93,24 @@ type Ps30m struct {
 var targets = []string{"demo", "x86-64", "rpi", "nano-rp2040"}
 
 func New(id, model, name string) dean.Thinger {
-	fmt.Println("NEW PS30M\r")
-	return &Ps30m{
+	fmt.Println("NEW PROSTAR\r")
+	return &Prostar{
 		Device: device.New(id, model, name, fs, targets).(*device.Device),
 		Modbus: modbus.New(newTransport()),
 		Status: "OK",
 	}
 }
 
-func (p *Ps30m) save(msg *dean.Msg) {
+func (p *Prostar) save(msg *dean.Msg) {
 	msg.Unmarshal(p).Broadcast()
 }
 
-func (p *Ps30m) getState(msg *dean.Msg) {
+func (p *Prostar) getState(msg *dean.Msg) {
 	p.Path = "state"
 	msg.Marshal(p).Reply()
 }
 
-func (p *Ps30m) Subscribers() dean.Subscribers {
+func (p *Prostar) Subscribers() dean.Subscribers {
 	return dean.Subscribers{
 		"state":             p.save,
 		"get/state":         p.getState,
@@ -123,7 +123,7 @@ func (p *Ps30m) Subscribers() dean.Subscribers {
 	}
 }
 
-func (p *Ps30m) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p *Prostar) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.API(w, r, p)
 }
 
@@ -167,7 +167,7 @@ func bcdToDecimal(bcd uint16) string {
 	return strconv.FormatUint(uint64(decimal), 10)
 }
 
-func (p *Ps30m) readSystem(s *System) error {
+func (p *Prostar) readSystem(s *System) error {
 	regs, err := p.ReadRegisters(regVerSw, 2)
 	if err != nil {
 		return err
@@ -177,7 +177,7 @@ func (p *Ps30m) readSystem(s *System) error {
 	return nil
 }
 
-func (p *Ps30m) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) error {
+func (p *Prostar) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) error {
 
 	regs, err := p.ReadRegisters(regAdcIa, 4)
 	if err != nil {
@@ -203,7 +203,7 @@ func (p *Ps30m) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) er
 	return nil
 }
 
-func (p *Ps30m) sendStatus(i *dean.Injector, newStatus string) {
+func (p *Prostar) sendStatus(i *dean.Injector, newStatus string) {
 	if p.Status == newStatus {
 		return
 	}
@@ -215,7 +215,7 @@ func (p *Ps30m) sendStatus(i *dean.Injector, newStatus string) {
 	i.Inject(msg.Marshal(status))
 }
 
-func (p *Ps30m) sendSystem(i *dean.Injector) {
+func (p *Prostar) sendSystem(i *dean.Injector) {
 	var system = msgSystem{Path: "update/system"}
 	var msg dean.Msg
 
@@ -233,7 +233,7 @@ func (p *Ps30m) sendSystem(i *dean.Injector) {
 	p.sendStatus(i, "OK")
 }
 
-func (p *Ps30m) sendDynamic(i *dean.Injector) {
+func (p *Prostar) sendDynamic(i *dean.Injector) {
 	var controller = msgController{Path: "update/controller"}
 	var battery = msgBattery{Path: "update/battery"}
 	var loadInfo = msgLoadInfo{Path: "update/load"}
@@ -265,7 +265,7 @@ func (p *Ps30m) sendDynamic(i *dean.Injector) {
 	p.sendStatus(i, "OK")
 }
 
-func (p *Ps30m) Run(i *dean.Injector) {
+func (p *Prostar) Run(i *dean.Injector) {
 
 	p.sendSystem(i)
 	p.sendDynamic(i)

@@ -1,6 +1,6 @@
 //go:build tinygo
 
-package ps30m
+package prostar
 
 import (
 	"embed"

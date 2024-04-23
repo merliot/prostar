@@ -1,4 +1,4 @@
-module github.com/merliot/ps30m
+module github.com/merliot/prostar
 
 go 1.22.0
 

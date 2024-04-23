@@ -1,6 +1,6 @@
-//go:build rpi
+//go:build x86_64
 
-package ps30m
+package prostar
 
 import (
 	"time"
@@ -26,14 +26,14 @@ func newTransport() *transport {
 	return &transport{port}
 }
 
-func (t *transport) Read(buf []byte) (n int, err error) {
+func (t *transport) Read(buf []byte) (int, error) {
 	if t.Port == nil {
 		return 0, modbus.ErrPortNotOpen
 	}
 	return t.Port.Read(buf)
 }
 
-func (t *transport) Write(buf []byte) (n int, err error) {
+func (t *transport) Write(buf []byte) (int, error) {
 	if t.Port == nil {
 		return 0, modbus.ErrPortNotOpen
 	}

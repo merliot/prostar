@@ -1,10 +1,10 @@
 import { WebSocketController, ViewMode } from './common.js'
 
 export function run(prefix, url, viewMode) {
-	const ps30m = new Ps30m(prefix, url, viewMode)
+	const prostar = new Prostar(prefix, url, viewMode)
 }
 
-class Ps30m extends WebSocketController {
+class Prostar extends WebSocketController {
 
 	open() {
 		super.open()

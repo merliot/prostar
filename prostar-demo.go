@@ -1,6 +1,6 @@
 //go:build !x86_64 && !tinygo && !rpi
 
-package ps30m
+package prostar
 
 type transport struct {
 	start uint16
