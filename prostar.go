@@ -168,6 +168,7 @@ func bcdToDecimal(bcd uint16) string {
 }
 
 func (p *Prostar) readSystem(s *System) error {
+	println("readSystem")
 	regs, err := p.ReadRegisters(regVerSw, 2)
 	if err != nil {
 		return err
