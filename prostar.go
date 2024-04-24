@@ -6,6 +6,7 @@ package prostar
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -167,8 +168,13 @@ func bcdToDecimal(bcd uint16) string {
 	return strconv.FormatUint(uint64(decimal), 10)
 }
 
+// Round to 2 decimal places
+func round(num float32) float32 {
+	rounded := math.Round(float64(num)*100) / 100
+	return float32(rounded)
+}
+
 func (p *Prostar) readSystem(s *System) error {
-	println("readSystem")
 	regs, err := p.ReadRegisters(regVerSw, 2)
 	if err != nil {
 		return err
@@ -186,20 +192,20 @@ func (p *Prostar) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) 
 	}
 
 	// Filtered ADC
-	s.Amps = f16(regs[0:2])
-	b.Volts = f16(regs[2:4])
-	s.Volts = f16(regs[4:6])
-	l.Volts = f16(regs[6:8])
+	s.Amps = round(f16(regs[0:2]))
+	b.Volts = round(f16(regs[2:4]))
+	s.Volts = round(f16(regs[4:6]))
+	l.Volts = round(f16(regs[6:8]))
 
 	regs, err = p.ReadRegisters(regAdcIl, 4)
 	if err != nil {
 		return err
 	}
 
-	l.Amps = f16(regs[0:2])
-	b.SenseVolts = f16(regs[2:4])
-	b.SlowVolts = f16(regs[4:6])
-	b.SlowAmps = f16(regs[6:8])
+	l.Amps = round(f16(regs[0:2]))
+	b.SenseVolts = round(f16(regs[2:4]))
+	b.SlowVolts = round(f16(regs[4:6]))
+	b.SlowAmps = round(f16(regs[6:8]))
 
 	return nil
 }
