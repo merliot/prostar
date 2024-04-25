@@ -151,6 +151,10 @@ func swap(b []byte) uint16 {
 	return (uint16(b[0]) << 8) | uint16(b[1])
 }
 
+func unswap(v uint16) []byte {
+	return []byte{byte(v >> 8), byte(v)}
+}
+
 func noswap(b []byte) uint16 {
 	return (uint16(b[1]) << 8) | uint16(b[0])
 }

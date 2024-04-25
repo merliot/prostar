@@ -31,7 +31,16 @@
 	.panel {
 		align-items: center;
 	}
+	#modbus-status {
+		justify-content: center;
+		align-items: center;
+	}
 </style>
+
+<div class="divFlexRow hidden" id="modbus-status">
+	<img src="images/modbus-disconnected.png"></img>
+	<span id="modbus-error"></span>
+</div>
 
 <div class="divFlexRow panel">
 	<img class="pic" src="images/charge-icon.png"></img>

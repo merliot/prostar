@@ -27,15 +27,25 @@ class Prostar extends WebSocketController {
 	}
 
 	showStatus() {
-		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
-			var status = document.getElementById("status")
-			status.value = ""
-			status.value += "Status:                      " + this.state.Status
+			let div = document.getElementById("modbus-status")
+			let msg = document.getElementById("modbus-error")
+			switch (this.state.Status) {
+			case "OK":
+				div.classList.replace("visibleFlex", "hidden")
+				break;
+			case "EOF":
+				div.classList.replace("hidden", "visibleFlex")
+				msg.innerText = "MODBUS DISCONNECTED"
+				break;
+			default:
+				div.classList.replace("hidden", "visibleFlex")
+				msg.innerText = this.state.Status
+				break;
+			}
 			break;
 		}
-		*/
 	}
 
 	showSystem() {
@@ -130,7 +140,7 @@ class Prostar extends WebSocketController {
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			document.getElementById("array-voltage").innerText = this.state.Array.Volts
-			document.getElementById("charge-power").innerText = this.state.Array.Volts * this.state.Array.Amps
+			document.getElementById("charge-power").innerText = (this.state.Array.Volts * this.state.Array.Amps).toFixed(2)
 			document.getElementById("charge-state").innerText = this.chargeState(this.state.Array.State)
 			break;
 		case ViewMode.ViewTile:
@@ -170,7 +180,7 @@ class Prostar extends WebSocketController {
 			this.state.LoadInfo = msg.LoadInfo
 			this.showLoadInfo()
 			break
-		case "update/solar":
+		case "update/array":
 			this.state.Array = msg.Array
 			this.showArray()
 			break

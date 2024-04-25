@@ -44,5 +44,5 @@ func (t *transport) Read(buf []byte) (int, error) {
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	return 0, errors.New("timeout")
+	return 0, errors.New("EOF")
 }
