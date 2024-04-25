@@ -1,4 +1,4 @@
-// Morningstar Prostar PWM solar charge controller device.
+// Morningstar Prostar PWM array charge controller device.
 //
 // modbus ref: https://www.morningstarcorp.com/wp-content/uploads/technical-doc-prostar-modbus-specification-en.pdf
 
@@ -18,9 +18,12 @@ import (
 )
 
 const (
-	regVerSw = 0x0000
-	regAdcIa = 0x0011
-	regAdcIl = 0x0016
+	regVerSw       = 0x0000
+	regAdcIa       = 0x0011
+	regAdcIl       = 0x0016
+	regChargeState = 0x0021
+	regLoadState   = 0x002E
+	regVbMinDaily  = 0x0041
 )
 
 type System struct {
@@ -33,21 +36,30 @@ type Controller struct {
 }
 
 type Battery struct {
-	Volts      float32
-	Amps       float32
-	SenseVolts float32
-	SlowVolts  float32
-	SlowAmps   float32
+	Volts       float32
+	SenseVolts  float32
+	SlowVolts   float32
+	SlowNetAmps float32
 }
 
 type LoadInfo struct {
 	Volts float32
 	Amps  float32
+	State uint16
+	Fault uint16
 }
 
-type Solar struct {
+type Array struct {
 	Volts float32
 	Amps  float32
+	State uint16
+}
+
+type Daily struct {
+	MinBattVolts float32
+	MaxBattVolts float32
+	ChargeAh     float32
+	LoadAh       float32
 }
 
 type msgStatus struct {
@@ -75,9 +87,14 @@ type msgLoadInfo struct {
 	LoadInfo LoadInfo
 }
 
-type msgSolar struct {
+type msgArray struct {
 	Path  string
-	Solar Solar
+	Array Array
+}
+
+type msgDaily struct {
+	Path  string
+	Daily Daily
 }
 
 type Prostar struct {
@@ -88,7 +105,8 @@ type Prostar struct {
 	Controller    Controller
 	Battery       Battery
 	LoadInfo      LoadInfo
-	Solar         Solar
+	Array         Array
+	Daily         Daily
 	tty           string
 }
 
@@ -120,7 +138,8 @@ func (p *Prostar) Subscribers() dean.Subscribers {
 		"update/controller": p.save,
 		"update/battery":    p.save,
 		"update/load":       p.save,
-		"update/solar":      p.save,
+		"update/array":      p.save,
+		"update/daily":      p.save,
 	}
 }
 
@@ -184,14 +203,15 @@ func (p *Prostar) readSystem(s *System) error {
 	return nil
 }
 
-func (p *Prostar) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) error {
+func (p *Prostar) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Array) error {
+
+	// FILTERED ADC
 
 	regs, err := p.ReadRegisters(regAdcIa, 4)
 	if err != nil {
 		return err
 	}
 
-	// Filtered ADC
 	s.Amps = round(f16(regs[0:2]))
 	b.Volts = round(f16(regs[2:4]))
 	s.Volts = round(f16(regs[4:6]))
@@ -205,7 +225,43 @@ func (p *Prostar) readDynamic(c *Controller, b *Battery, l *LoadInfo, s *Solar) 
 	l.Amps = round(f16(regs[0:2]))
 	b.SenseVolts = round(f16(regs[2:4]))
 	b.SlowVolts = round(f16(regs[4:6]))
-	b.SlowAmps = round(f16(regs[6:8]))
+	b.SlowNetAmps = round(f16(regs[6:8]))
+
+	// CHARGER STATUS
+
+	regs, err = p.ReadRegisters(regChargeState, 1)
+	if err != nil {
+		return err
+	}
+
+	s.State = swap(regs[0:2])
+
+	// LOAD STATUS
+
+	regs, err = p.ReadRegisters(regLoadState, 2)
+	if err != nil {
+		return err
+	}
+
+	l.State = swap(regs[0:2])
+	l.Fault = swap(regs[2:4])
+
+	return nil
+}
+
+func (p *Prostar) readDaily(d *Daily) error {
+
+	// LOGGER
+
+	regs, err := p.ReadRegisters(regVbMinDaily, 4)
+	if err != nil {
+		return err
+	}
+
+	d.MinBattVolts = round(f16(regs[0:2]))
+	d.MaxBattVolts = round(f16(regs[2:4]))
+	d.ChargeAh = round(f16(regs[4:6]))
+	d.LoadAh = round(f16(regs[6:8]))
 
 	return nil
 }
@@ -244,11 +300,11 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 	var controller = msgController{Path: "update/controller"}
 	var battery = msgBattery{Path: "update/battery"}
 	var loadInfo = msgLoadInfo{Path: "update/load"}
-	var solar = msgSolar{Path: "update/solar"}
+	var array = msgArray{Path: "update/array"}
 	var msg dean.Msg
 
 	err := p.readDynamic(&controller.Controller, &battery.Battery,
-		&loadInfo.LoadInfo, &solar.Solar)
+		&loadInfo.LoadInfo, &array.Array)
 	if err != nil {
 		p.sendStatus(i, err.Error())
 		return
@@ -265,8 +321,27 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 	if loadInfo.LoadInfo != p.LoadInfo {
 		i.Inject(msg.Marshal(loadInfo))
 	}
-	if solar.Solar != p.Solar {
-		i.Inject(msg.Marshal(solar))
+	if array.Array != p.Array {
+		i.Inject(msg.Marshal(array))
+	}
+
+	p.sendStatus(i, "OK")
+}
+
+func (p *Prostar) sendHourly(i *dean.Injector) {
+	var daily = msgDaily{Path: "update/daily"}
+	var msg dean.Msg
+
+	err := p.readDaily(&daily.Daily)
+	if err != nil {
+		p.sendStatus(i, err.Error())
+		return
+	}
+
+	// If anything has changed, send update msg(s)
+
+	if daily.Daily != p.Daily {
+		i.Inject(msg.Marshal(daily))
 	}
 
 	p.sendStatus(i, "OK")
@@ -286,7 +361,7 @@ func (p *Prostar) Run(i *dean.Injector) {
 
 	p.sendSystem(i)
 	p.sendDynamic(i)
-	//p.sendHourly(i)
+	p.sendHourly(i)
 
 	nextHour := time.Now().Add(time.Hour)
 
@@ -294,7 +369,7 @@ func (p *Prostar) Run(i *dean.Injector) {
 		p.sendDynamic(i)
 		time.Sleep(5 * time.Second)
 		if time.Now().After(nextHour) {
-			//p.sendHourly(i)
+			p.sendHourly(i)
 			nextHour = time.Now().Add(time.Hour)
 		}
 	}

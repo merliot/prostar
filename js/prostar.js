@@ -22,12 +22,12 @@ class Prostar extends WebSocketController {
 		this.showController()
 		this.showBattery()
 		this.showLoadInfo()
-		this.showSolar()
+		this.showArray()
 		this.showDaily()
-		this.showHistorical()
 	}
 
 	showStatus() {
+		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			var status = document.getElementById("status")
@@ -35,9 +35,11 @@ class Prostar extends WebSocketController {
 			status.value += "Status:                      " + this.state.Status
 			break;
 		}
+		*/
 	}
 
 	showSystem() {
+		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			var ta = document.getElementById("system")
@@ -46,9 +48,11 @@ class Prostar extends WebSocketController {
 			ta.value += "Batt Voltage Multiplier:     " + this.state.System.BattVoltMulti
 			break;
 		}
+		*/
 	}
 
 	showController() {
+		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
 			var ta = document.getElementById("controller")
@@ -56,39 +60,49 @@ class Prostar extends WebSocketController {
 			ta.value += "* Current (A):               " + this.state.Controller.Amps
 			break;
 		}
+		*/
 	}
 
 	showBattery() {
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
-			var ta = document.getElementById("battery")
-			ta.value = ""
-			ta.value += "* Voltage (V):               " + this.state.Battery.Volts + "\r\n"
-			ta.value += "* Current (A):               " + this.state.Battery.Amps + "\r\n"
-			ta.value += "* Sense Voltage (V):         " + this.state.Battery.SenseVolts + "\r\n"
-			ta.value += "* Slow Filter Voltage (V):   " + this.state.Battery.SlowVolts + "\r\n"
-			ta.value += "* Slow Filter Current (A):   " + this.state.Battery.SlowAmps
+			document.getElementById("net-battery-current").innerText = this.state.Battery.SlowNetAmps
+			document.getElementById("battery-terminal-voltage").innerText = this.state.Battery.Volts
 			break;
 		case ViewMode.ViewTile:
-			document.getElementById("battery-volts").innerText = this.state.Battery.Volts.toFixed(2)
-			document.getElementById("battery-amps").innerText = this.state.Battery.Amps.toFixed(2)
+			document.getElementById("battery-volts").innerText = this.state.Battery.Volts
+			document.getElementById("battery-amps").innerText = this.state.Battery.SlowNetAmps
 			break;
+		}
+	}
+
+	loadState(state) {
+		switch (state) {
+		case 0: return "START";
+		case 1: return "LOAD ON";
+		case 2: return "LVD WARNING";
+		case 3: return "LVD";
+		case 4: return "FAULT";
+		case 5: return "DISCONNECT";
+		case 6: return "LOAD OFF";
+		case 7: return "OVERRIDE";
+		default: return "??";
 		}
 	}
 
 	showLoadInfo() {
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
-			var ta = document.getElementById("load")
-			ta.value = ""
-			ta.value += "* Voltage (V):               " + this.state.LoadInfo.Volts + "\r\n"
-			ta.value += "* Current (A):               " + this.state.LoadInfo.Amps
+			document.getElementById("daily-load").innerText = this.state.Daily.LoadAh
+			document.getElementById("load-state").innerText = this.loadState(this.state.LoadInfo.State)
+			document.getElementById("load-voltage").innerText = this.state.LoadInfo.Volts
+			document.getElementById("load-current").innerText = this.state.LoadInfo.Amps
 			break;
 		case ViewMode.ViewTile:
 			var volts = document.getElementById("load-volts")
 			var amps = document.getElementById("load-amps")
-			volts.innerText = this.state.LoadInfo.Volts.toFixed(2)
-			amps.innerText = this.state.LoadInfo.Amps.toFixed(2)
+			volts.innerText = this.state.LoadInfo.Volts
+			amps.innerText = this.state.LoadInfo.Amps
 			if (this.state.LoadInfo.Amps === 0) {
 				volts.style.background = "tomato"
 				amps.style.background = "tomato"
@@ -97,41 +111,41 @@ class Prostar extends WebSocketController {
 		}
 	}
 
-	showSolar() {
+	chargeState(state) {
+		switch (state) {
+		case 0: return "START";
+		case 1: return "NIGHT CHECK";
+		case 2: return "DISCONNECT";
+		case 3: return "NIGHT";
+		case 4: return "FAULT";
+		case 5: return "BULK";
+		case 6: return "ABSORPTION";
+		case 7: return "FLOAT";
+		case 8: return "EQUALIZE";
+		default: return "??";
+		}
+	}
+
+	showArray() {
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
-			var ta = document.getElementById("solar")
-			ta.value = ""
-			ta.value += "* Voltage (V):               " + this.state.Solar.Volts + "\r\n"
-			ta.value += "* Current (A):               " + this.state.Solar.Amps
+			document.getElementById("array-voltage").innerText = this.state.Array.Volts
+			document.getElementById("charge-power").innerText = this.state.Array.Volts * this.state.Array.Amps
+			document.getElementById("charge-state").innerText = this.chargeState(this.state.Array.State)
 			break;
 		case ViewMode.ViewTile:
-			document.getElementById("solar-volts").innerText = this.state.Solar.Volts.toFixed(2)
-			document.getElementById("solar-amps").innerText = this.state.Solar.Amps.toFixed(2)
+			document.getElementById("solar-volts").innerText = this.state.Array.Volts
+			document.getElementById("solar-amps").innerText = this.state.Array.Amps
 			break;
 		}
 	}
 
 	showDaily() {
-		/*
 		switch (this.viewMode) {
 		case ViewMode.ViewFull:
-			var ta = document.getElementById("daily")
-			ta.value = ""
+			document.getElementById("daily-system-charge").innerText = this.state.Daily.ChargeAh
 			break;
 		}
-		*/
-	}
-
-	showHistorical() {
-		/*
-		switch (this.viewMode) {
-		case ViewMode.ViewFull:
-			var ta = document.getElementById("historical")
-			ta.value = ""
-			break;
-		}
-		*/
 	}
 
 	handle(msg) {
@@ -157,16 +171,12 @@ class Prostar extends WebSocketController {
 			this.showLoadInfo()
 			break
 		case "update/solar":
-			this.state.Solar = msg.Solar
-			this.showSolar()
+			this.state.Array = msg.Array
+			this.showArray()
 			break
 		case "update/daily":
 			this.state.Daily = msg.Daily
 			this.showDaily()
-			break
-		case "update/historical":
-			this.state.Historical = msg.Historical
-			this.showHistorical()
 			break
 		}
 	}
