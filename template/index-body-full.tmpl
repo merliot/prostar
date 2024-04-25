@@ -3,26 +3,30 @@
 		width: 100%;
 		border-collapse: collapse;
 	}
-	th, td {
-		padding: 8px;
-		text-align: left;
-		border-bottom: 1px solid #ddd;
-	}
 	th {
+		color: #737373;
 		text-align: center;
+		font-weight: normal;
+		padding-bottom: 10px;
 	}
 	tr:nth-child(even) {
 		background-color: #f2f2f2;
 	}
+	td {
+		padding: 8px;
+		text-align: left;
+		color: #737373;
+		font-weight: bold;
+	}
 	td:nth-child(2) {
 		text-align: right;
+		color: black;
+		font-weight: normal;
 	}
-	.icon {
+	.pic {
 		width: 60px;
 		height: 60px;
-		margin-right: 15px;
-		padding: 0px;
-		cursor: default;
+		margin-right: 20px;
 	}
 	.panel {
 		align-items: center;
@@ -30,17 +34,17 @@
 </style>
 
 <div class="divFlexRow panel">
-	<img class="icon" src="images/charge-icon.png"></img>
+	<img class="pic" src="images/charge-icon.png"></img>
 	<table>
 		<tr>
-			<th colspan="2">Charge Summary</th>
+			<th colspan="2">CHARGE SUMMARY</th>
 		</tr>
 		<tr>
 			<td>Array Voltage</td>
 			<td><span id="array-voltage"></span> V</td>
 		</tr>
 		<tr>
-			<td>ProStar Charge Power</td>
+			<td>Charge Power</td>
 			<td><span id="charge-power"></span> W</td>
 		</tr>
 		<tr>
@@ -55,10 +59,10 @@
 </div>
 
 <div class="divFlexRow panel">
-	<img class="icon" src="images/battery-icon.png"></img>
+	<img class="pic" src="images/battery-icon.png"></img>
 	<table>
 		<tr>
-			<th colspan="2">Battery Summary</th>
+			<th colspan="2">BATTERY SUMMARY</th>
 		</tr>
 		<tr>
 			<td>Net Battery Current</td>
@@ -72,10 +76,10 @@
 </div>
 
 <div class="divFlexRow panel">
-	<img class="icon" src="images/load-icon.png"></img>
+	<img class="pic" src="images/load-icon.png"></img>
 	<table>
 		<tr>
-			<th colspan="2">Load Summary</th>
+			<th colspan="2">LOAD SUMMARY</th>
 		</tr>
 		<tr>
 			<td>Load Voltage</td>
