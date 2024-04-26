@@ -37,7 +37,7 @@ class Prostar extends WebSocketController {
 				break;
 			case "EOF":
 				div.classList.replace("hidden", "visibleFlex")
-				msg.innerText = "MODBUS DISCONNECTED"
+				msg.innerText = "METERBUS DISCONNECTED"
 				break;
 			default:
 				div.classList.replace("hidden", "visibleFlex")
