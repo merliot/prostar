@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/merliot/dean v0.0.0-20240412222937-26290ebe17d0
-	github.com/merliot/device v0.0.0-20240424032442-12ddba18756a
+	github.com/merliot/device v0.0.0-20240424080400-4db8630d1d84
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	github.com/x448/float16 v0.8.4
 )
