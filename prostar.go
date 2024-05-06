@@ -120,13 +120,13 @@ func New(id, model, name string) dean.Thinger {
 	}
 }
 
-func (p *Prostar) save(msg *dean.Msg) {
-	msg.Unmarshal(p).Broadcast()
+func (p *Prostar) save(pkt *dean.Packet) {
+	pkt.Unmarshal(p).Broadcast()
 }
 
-func (p *Prostar) getState(msg *dean.Msg) {
+func (p *Prostar) getState(pkt *dean.Packet) {
 	p.Path = "state"
-	msg.Marshal(p).Reply()
+	pkt.Marshal(p).Reply()
 }
 
 func (p *Prostar) Subscribers() dean.Subscribers {
@@ -276,15 +276,15 @@ func (p *Prostar) sendStatus(i *dean.Injector, newStatus string) {
 	}
 
 	var status = msgStatus{Path: "update/status"}
-	var msg dean.Msg
+	var pkt dean.Packet
 
 	status.Status = newStatus
-	i.Inject(msg.Marshal(status))
+	i.Inject(pkt.Marshal(status))
 }
 
 func (p *Prostar) sendSystem(i *dean.Injector) {
 	var system = msgSystem{Path: "update/system"}
-	var msg dean.Msg
+	var pkt dean.Packet
 
 	// sendSystem blocks until we get a good system info read
 
@@ -293,7 +293,7 @@ func (p *Prostar) sendSystem(i *dean.Injector) {
 			p.sendStatus(i, err.Error())
 			continue
 		}
-		i.Inject(msg.Marshal(system))
+		i.Inject(pkt.Marshal(system))
 		break
 	}
 
@@ -305,7 +305,7 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 	var battery = msgBattery{Path: "update/battery"}
 	var loadInfo = msgLoadInfo{Path: "update/load"}
 	var array = msgArray{Path: "update/array"}
-	var msg dean.Msg
+	var pkt dean.Packet
 
 	err := p.readDynamic(&controller.Controller, &battery.Battery,
 		&loadInfo.LoadInfo, &array.Array)
@@ -317,16 +317,16 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 	// If anything has changed, send update msg(s)
 
 	if controller.Controller != p.Controller {
-		i.Inject(msg.Marshal(controller))
+		i.Inject(pkt.Marshal(controller))
 	}
 	if battery.Battery != p.Battery {
-		i.Inject(msg.Marshal(battery))
+		i.Inject(pkt.Marshal(battery))
 	}
 	if loadInfo.LoadInfo != p.LoadInfo {
-		i.Inject(msg.Marshal(loadInfo))
+		i.Inject(pkt.Marshal(loadInfo))
 	}
 	if array.Array != p.Array {
-		i.Inject(msg.Marshal(array))
+		i.Inject(pkt.Marshal(array))
 	}
 
 	p.sendStatus(i, "OK")
@@ -334,7 +334,7 @@ func (p *Prostar) sendDynamic(i *dean.Injector) {
 
 func (p *Prostar) sendHourly(i *dean.Injector) {
 	var daily = msgDaily{Path: "update/daily"}
-	var msg dean.Msg
+	var pkt dean.Packet
 
 	err := p.readDaily(&daily.Daily)
 	if err != nil {
@@ -345,7 +345,7 @@ func (p *Prostar) sendHourly(i *dean.Injector) {
 	// If anything has changed, send update msg(s)
 
 	if daily.Daily != p.Daily {
-		i.Inject(msg.Marshal(daily))
+		i.Inject(pkt.Marshal(daily))
 	}
 
 	p.sendStatus(i, "OK")
