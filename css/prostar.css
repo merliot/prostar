@@ -1,9 +1,38 @@
-legend {
+.model-prostar legend {
 	font-weight: bold;
 	margin: 0 0 10px 0;
 }
 
-textarea {
+.model-prostar textarea {
 	width: 100%;
 	border: none;
+}
+
+.model-prostar .tile #grid {
+	display: grid;
+	grid-template-columns: 50px 40px 40px;
+	grid-gap: 2px;
+}
+
+.model-prostar .tile #grid div {
+	text-align: center;
+}
+
+.model-prostar .tile .hdr {
+	font-weight: bold;
+}
+
+.model-prostar .tile .value {
+	border: 1px solid;
+	background: lightgreen;
+}
+
+.model-prostar .tile .offline .value {
+	background: lightgrey;
+}
+
+.model-prostar .tile-body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
